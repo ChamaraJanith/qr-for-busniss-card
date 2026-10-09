@@ -62,8 +62,68 @@ document.getElementById('vcard-form').addEventListener('submit', async function(
     generateBtn.disabled = false;
 });
 
+// Download .vcf functionality
+document.getElementById('download-vcf-btn').addEventListener('click', async function() {
+    const btn = this;
+    const originalText = btn.textContent;
+    btn.textContent = 'Downloading...';
+    btn.disabled = true;
+
+    // Get values
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const company = document.getElementById('company').value.trim();
+    const jobTitle = document.getElementById('jobTitle').value.trim();
+    const photoUrl = document.getElementById('photoUrl').value.trim();
+    
+    // Construct vCard format
+    let vcard = "BEGIN:VCARD\r\nVERSION:3.0\r\n";
+    vcard += `N:${lastName};${firstName};;;\r\n`;
+    vcard += `FN:${firstName} ${lastName}\r\n`;
+    vcard += `TEL;TYPE=CELL:${phone}\r\n`;
+    
+    if (email) vcard += `EMAIL;TYPE=WORK,INTERNET:${email}\r\n`;
+    if (company) vcard += `ORG:${company}\r\n`;
+    if (jobTitle) vcard += `TITLE:${jobTitle}\r\n`;
+
+    // Process image if URL is provided
+    if (photoUrl) {
+        try {
+            // For file download, we can use a higher quality and size
+            const base64Image = await getBase64ImageFromUrl(photoUrl, 200, 0.8);
+            if (base64Image) {
+                const b64Data = base64Image.split(',')[1];
+                vcard += `PHOTO;ENCODING=b;TYPE=JPEG:${b64Data}\r\n`;
+            }
+        } catch (error) {
+            console.error('Error loading image:', error);
+            alert('Could not load the image from the URL.');
+        }
+    }
+    
+    vcard += "END:VCARD\r\n";
+
+    // Trigger download
+    const blob = new Blob([vcard], { type: 'text/vcard' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${firstName || 'contact'}.vcf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    btn.textContent = originalText;
+    btn.disabled = false;
+});
+
+
 // Function to fetch image, resize it (so QR code doesn't break), and convert to Base64
-function getBase64ImageFromUrl(imageUrl) {
+// Function to fetch image, resize it, and convert to Base64
+function getBase64ImageFromUrl(imageUrl, maxSize = 48, quality = 0.3) {
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = 'Anonymous'; // Crucial for fetching from GitHub/external URLs
@@ -71,8 +131,6 @@ function getBase64ImageFromUrl(imageUrl) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // Resize to a very small thumbnail (e.g., 48x48) to fit in QR code limits
-            const maxSize = 48; 
             let width = img.width;
             let height = img.height;
             
@@ -94,8 +152,8 @@ function getBase64ImageFromUrl(imageUrl) {
             // Draw image on canvas
             ctx.drawImage(img, 0, 0, width, height);
             
-            // Get base64 string (JPEG format with high compression)
-            const dataURL = canvas.toDataURL('image/jpeg', 0.3);
+            // Get base64 string
+            const dataURL = canvas.toDataURL('image/jpeg', quality);
             resolve(dataURL);
         };
         img.onerror = (error) => {

@@ -40,7 +40,10 @@
                     <input type="url" id="photoUrl" placeholder="Profile Picture URL (e.g. GitHub Pages Image Link)">
                 </div>
 
-                <button type="submit" class="generate-btn">Generate QR Code</button>
+                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                    <button type="submit" class="generate-btn" style="flex: 1;">Generate QR Code</button>
+                    <button type="button" id="download-vcf-btn" class="generate-btn" style="flex: 1; background: #8b5cf6;">Download .vcf</button>
+                </div>
             </form>
             
             <div id="qr-container" class="hidden">
