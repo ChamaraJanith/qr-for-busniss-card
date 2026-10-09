@@ -14,19 +14,19 @@ document.getElementById('vcard-form').addEventListener('submit', async function(
     const jobTitle = document.getElementById('jobTitle').value.trim();
     const photoUrl = document.getElementById('photoUrl').value.trim();
     
-    // Construct vCard format
-    let vcard = "BEGIN:VCARD\nVERSION:3.0\n";
-    vcard += `N:${lastName};${firstName};;;\n`;
-    vcard += `FN:${firstName} ${lastName}\n`;
-    vcard += `TEL;TYPE=CELL:${phone}\n`;
+    // Construct vCard format (CRLF \r\n is standard for vCard)
+    let vcard = "BEGIN:VCARD\r\nVERSION:3.0\r\n";
+    vcard += `N:${lastName};${firstName};;;\r\n`;
+    vcard += `FN:${firstName} ${lastName}\r\n`;
+    vcard += `TEL;TYPE=CELL:${phone}\r\n`;
     
-    if (email) vcard += `EMAIL;TYPE=WORK,INTERNET:${email}\n`;
-    if (company) vcard += `ORG:${company}\n`;
-    if (jobTitle) vcard += `TITLE:${jobTitle}\n`;
+    if (email) vcard += `EMAIL;TYPE=WORK,INTERNET:${email}\r\n`;
+    if (company) vcard += `ORG:${company}\r\n`;
+    if (jobTitle) vcard += `TITLE:${jobTitle}\r\n`;
 
     // Add photo directly via URL (much better for QR scanning)
     if (photoUrl) {
-        vcard += `PHOTO;TYPE=JPEG;VALUE=URI:${photoUrl}\n`;
+        vcard += `PHOTO;TYPE=JPEG;VALUE=URI:${photoUrl}\r\n`;
     }
     
     vcard += "END:VCARD";
@@ -39,11 +39,11 @@ document.getElementById('vcard-form').addEventListener('submit', async function(
     try {
         new QRCode(qrDiv, {
             text: vcard,
-            width: 350,
-            height: 350,
+            width: 250,
+            height: 250,
             colorDark: "#000000",
             colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.L
+            correctLevel: QRCode.CorrectLevel.M
         });
         
         // Show QR container with animation
