@@ -95,7 +95,9 @@ document.getElementById('download-vcf-btn').addEventListener('click', async func
             const base64Image = await getBase64ImageFromUrl(photoUrl, 200, 0.8);
             if (base64Image) {
                 const b64Data = base64Image.split(',')[1];
-                vcard += `PHOTO;ENCODING=b;TYPE=JPEG:${b64Data}\r\n`;
+                // vCard standard requires folding long lines every 74 characters
+                const foldedBase64 = b64Data.match(/.{1,74}/g).join('\r\n ');
+                vcard += `PHOTO;ENCODING=b;TYPE=JPEG:${foldedBase64}\r\n\r\n`;
             }
         } catch (error) {
             console.error('Error loading image:', error);
