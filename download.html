@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloading Contact...</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #0f172a; color: white; }
+        .card { background: rgba(30, 41, 59, 0.7); padding: 30px; border-radius: 20px; display: inline-block; }
+        .btn { display: inline-block; margin-top: 20px; padding: 12px 24px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Contact is ready!</h2>
+        <p>If the download didn't start automatically, click below:</p>
+        <a id="download-btn" class="btn" href="#">Download Contact</a>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            
+            const firstName = params.get('firstName') || '';
+            const lastName = params.get('lastName') || '';
+            const phone = params.get('phone') || '';
+            const email = params.get('email') || '';
+            const company = params.get('company') || '';
+            const jobTitle = params.get('jobTitle') || '';
+            const photoUrl = params.get('photoUrl') || '';
+
+            let vcard = "BEGIN:VCARD\nVERSION:3.0\n";
+            vcard += `N:${lastName};${firstName};;;\n`;
+            vcard += `FN:${firstName} ${lastName}\n`;
+            vcard += `TEL;TYPE=CELL:${phone}\n`;
+            
+            if (email) vcard += `EMAIL;TYPE=WORK,INTERNET:${email}\n`;
+            if (company) vcard += `ORG:${company}\n`;
+            if (jobTitle) vcard += `TITLE:${jobTitle}\n`;
+            
+            if (photoUrl) {
+                vcard += `PHOTO;VALUE=URI:${photoUrl}\n`;
+            }
+            
+            vcard += "END:VCARD";
+
+            const blob = new Blob([vcard], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            
+            const downloadBtn = document.getElementById('download-btn');
+            downloadBtn.href = url;
+            downloadBtn.download = `${firstName || 'Contact'}.vcf`;
+            
+            // Auto click to download
+            downloadBtn.click();
+        };
+    </script>
+</body>
+</html>
