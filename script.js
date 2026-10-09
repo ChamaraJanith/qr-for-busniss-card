@@ -24,19 +24,9 @@ document.getElementById('vcard-form').addEventListener('submit', async function(
     if (company) vcard += `ORG:${company}\n`;
     if (jobTitle) vcard += `TITLE:${jobTitle}\n`;
 
-    // Process image if URL is provided
+    // Add photo directly via URL (much better for QR scanning)
     if (photoUrl) {
-        try {
-            const base64Image = await getBase64ImageFromUrl(photoUrl);
-            if (base64Image) {
-                // Remove the data:image/jpeg;base64, part
-                const b64Data = base64Image.split(',')[1];
-                vcard += `PHOTO;ENCODING=b;TYPE=JPEG:${b64Data}\n`;
-            }
-        } catch (error) {
-            console.error('Error loading image:', error);
-            alert('Could not load the image from the URL. Please make sure the URL is correct and allows cross-origin requests (CORS).');
-        }
+        vcard += `PHOTO;TYPE=JPEG;VALUE=URI:${photoUrl}\n`;
     }
     
     vcard += "END:VCARD";
