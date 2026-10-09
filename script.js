@@ -51,7 +51,7 @@ document.getElementById('vcard-form').addEventListener('submit', async function(
             text: vcard,
             width: 350,
             height: 350,
-            colorDark: "#0f172a",
+            colorDark: "#000000",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.L
         });
@@ -81,8 +81,8 @@ function getBase64ImageFromUrl(imageUrl) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             
-            // Resize to a very small thumbnail (e.g., 64x64) to fit in QR code limits
-            const maxSize = 64; 
+            // Resize to a very small thumbnail (e.g., 48x48) to fit in QR code limits
+            const maxSize = 48; 
             let width = img.width;
             let height = img.height;
             
@@ -105,7 +105,7 @@ function getBase64ImageFromUrl(imageUrl) {
             ctx.drawImage(img, 0, 0, width, height);
             
             // Get base64 string (JPEG format with high compression)
-            const dataURL = canvas.toDataURL('image/jpeg', 0.5);
+            const dataURL = canvas.toDataURL('image/jpeg', 0.3);
             resolve(dataURL);
         };
         img.onerror = (error) => {
