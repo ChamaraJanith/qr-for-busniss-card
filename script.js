@@ -12,6 +12,7 @@ document.getElementById('vcard-form').addEventListener('submit', async function(
     const email = document.getElementById('email').value.trim();
     const company = document.getElementById('company').value.trim();
     const jobTitle = document.getElementById('jobTitle').value.trim();
+    const website = document.getElementById('website').value.trim();
     const photoUrl = document.getElementById('photoUrl').value.trim();
     
     // Construct vCard format (CRLF \r\n is standard for vCard)
@@ -23,6 +24,7 @@ document.getElementById('vcard-form').addEventListener('submit', async function(
     if (email) vcard += `EMAIL;TYPE=WORK,INTERNET:${email}\r\n`;
     if (company) vcard += `ORG:${company}\r\n`;
     if (jobTitle) vcard += `TITLE:${jobTitle}\r\n`;
+    if (website) vcard += `URL:${website}\r\n`;
 
     // Add photo directly via URL (much better for QR scanning)
     if (photoUrl) {
@@ -76,6 +78,7 @@ document.getElementById('download-vcf-btn').addEventListener('click', async func
     const email = document.getElementById('email').value.trim();
     const company = document.getElementById('company').value.trim();
     const jobTitle = document.getElementById('jobTitle').value.trim();
+    const website = document.getElementById('website').value.trim();
     const photoUrl = document.getElementById('photoUrl').value.trim();
     
     // Construct vCard format
@@ -87,6 +90,7 @@ document.getElementById('download-vcf-btn').addEventListener('click', async func
     if (email) vcard += `EMAIL;TYPE=WORK,INTERNET:${email}\r\n`;
     if (company) vcard += `ORG:${company}\r\n`;
     if (jobTitle) vcard += `TITLE:${jobTitle}\r\n`;
+    if (website) vcard += `URL:${website}\r\n`;
 
     // Process image if URL is provided
     if (photoUrl) {
