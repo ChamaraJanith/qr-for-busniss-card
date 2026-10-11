@@ -13,7 +13,12 @@ document.getElementById('vcard-form').addEventListener('submit', async function(
     const company = document.getElementById('company').value.trim();
     const jobTitle = document.getElementById('jobTitle').value.trim();
     const website = document.getElementById('website').value.trim();
-    const photoUrl = document.getElementById('photoUrl').value.trim();
+    let photoUrl = document.getElementById('photoUrl').value.trim();
+    
+    // Convert GitHub blob links to raw image links
+    if (photoUrl.includes('github.com') && photoUrl.includes('/blob/')) {
+        photoUrl = photoUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+    }
     
     // Construct vCard format (CRLF \r\n is standard for vCard)
     let vcard = "BEGIN:VCARD\r\nVERSION:3.0\r\n";
@@ -79,7 +84,12 @@ document.getElementById('download-vcf-btn').addEventListener('click', async func
     const company = document.getElementById('company').value.trim();
     const jobTitle = document.getElementById('jobTitle').value.trim();
     const website = document.getElementById('website').value.trim();
-    const photoUrl = document.getElementById('photoUrl').value.trim();
+    let photoUrl = document.getElementById('photoUrl').value.trim();
+    
+    // Convert GitHub blob links to raw image links
+    if (photoUrl.includes('github.com') && photoUrl.includes('/blob/')) {
+        photoUrl = photoUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+    }
     
     // Construct vCard format
     let vcard = "BEGIN:VCARD\r\nVERSION:3.0\r\n";
